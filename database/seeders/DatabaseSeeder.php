@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
         User::factory()->create([
             'name' => 'Matthias',
             'email' => 'matth.conte@gmail.com',
+            'password' => bcrypt('Chicca1996!'),
         ]);
 
         User::factory(19)->create();
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         Status::factory()->create(['name' => 'Implemented', 'classes' => 'bg-green text-white']);
         Status::factory()->create(['name' => 'Closed', 'classes' => 'bg-red text-white']);
 
-        Idea::factory(100)->create();
+        Idea::factory(100)->existing()->create();
 
         foreach (range(1, 20) as $user_id) {
             foreach (range(1, 100) as $idea_id) {
@@ -50,6 +50,5 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
-
     }
 }
