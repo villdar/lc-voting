@@ -9,7 +9,6 @@ use Livewire\Component;
 
 class SetStatus extends Component
 {
-
     public $idea;
     public $status;
     public $notifyAllVoters;
@@ -29,11 +28,11 @@ class SetStatus extends Component
         $this->idea->status_id = $this->status;
         $this->idea->save();
 
-        if($this->notifyAllVoters) {
+        if ($this->notifyAllVoters) {
             NotifyAllVoters::dispatch($this->idea);
         }
 
-        $this->emit('statusWasUpdated');
+        $this->emit('statusWasUpdated', 'Status was updated successfully!');
     }
 
 

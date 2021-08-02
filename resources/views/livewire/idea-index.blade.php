@@ -49,6 +49,11 @@
                 </a>
             </h4>
             <div class="mt-3 text-gray-600 line-clamp-3">
+                @admin
+                    @if ($idea->spam_reports > 0)
+                        <div class="mb-2 text-xs font-semibold text-red">Spam Reports: {{ $idea->spam_reports }}</div>
+                    @endif
+                @endadmin
                 {{$idea->description}}
             </div>
 
@@ -58,7 +63,7 @@
                     <div>&bull;</div>
                     <div>{{ $idea->category->name }}</div>
                     <div>&bull;</div>
-                    <div class="text-gray-800">3 Comments</div>
+                    <div class="text-gray-800">{{ $idea->comments_count }} comments</div>
                 </div>
                 <div class="flex items-center mt-4 space-x-2 md:mt-0"
                     x-data="{isOpen: false}">

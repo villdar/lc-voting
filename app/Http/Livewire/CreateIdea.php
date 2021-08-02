@@ -16,7 +16,7 @@ class CreateIdea extends Component
 
     protected $rules = [
         'title' => 'required|min:4',
-        'category' => 'required|exists:App\Models\Category,id',
+        'category' => 'required|integer|exists:categories,id',
         'description' => 'required|min:4',
     ];
 
@@ -37,7 +37,7 @@ class CreateIdea extends Component
 
         $idea->vote(auth()->user());
 
-        session()->flash('success_message', 'Idea was added succesfully');
+        session()->flash('success_message', 'Idea was added succesfully!');
 
         $this->reset();
 

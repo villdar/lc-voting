@@ -12,8 +12,7 @@ class Idea extends Model
 {
     use HasFactory, Sluggable;
 
-    const PAGINATION_COUNT = 10;
-
+    protected $perPage = 10;
     protected $guarded = [];
 
     /**
@@ -33,6 +32,11 @@ class Idea extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function comments()
+    {
+        return  $this->hasMany(Comment::class);
     }
 
     public function category()
@@ -64,8 +68,7 @@ class Idea extends Model
 
     public function vote(User $user)
     {
-
-        if($this->isVotedByUser($user)) {
+        if ($this->isVotedByUser($user)) {
             throw new DuplicateVoteException;
         }
 
@@ -86,7 +89,5 @@ class Idea extends Model
         } else {
             throw new VoteNotFoundException;
         }
-
-
     }
 }

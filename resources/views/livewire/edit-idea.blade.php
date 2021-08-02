@@ -1,30 +1,37 @@
-<div class="fixed inset-0 z-10 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+<div
+    x-cloak
+    x-data="{ isOpen: false }"
+    x-show="isOpen"
+    @keydown.escape.window="isOpen = false"
+    @custom-show-edit-modal.window="
+        isOpen = true
+        $nextTick(() => $refs.title.focus())
+    "
+    x-init="window.livewire.on('ideaWasUpdated', () => {
+        isOpen = false
+    })"
+    class="fixed inset-0 z-10 overflow-y-auto"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+>
     <div class="flex items-end justify-center min-h-screen">
-        <!--
-      Background overlay, show/hide based on modal state.
+        <div
+            x-show.transition.opacity="isOpen"
+            class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+            aria-hidden="true"
+        >
+        </div>
 
-      Entering: "ease-out duration-300"
-        From: "opacity-0"
-        To: "opacity-100"
-      Leaving: "ease-in duration-200"
-        From: "opacity-100"
-        To: "opacity-0"
-    -->
-        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"></div>
-
-        <!--
-      Modal panel, show/hide based on modal state.
-
-      Entering: "ease-out duration-300"
-        From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-        To: "opacity-100 translate-y-0 sm:scale-100"
-      Leaving: "ease-in duration-200"
-        From: "opacity-100 translate-y-0 sm:scale-100"
-        To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-    -->
-        <div class="py-4 overflow-hidden transition-all transform bg-white rounded-t-xl modal sm:max-w-lg sm:w-full">
+        <div
+            x-show.transition.origin.bottom.duration.400ms="isOpen"
+            class="py-4 overflow-hidden transition-all transform bg-white rounded-t-xl modal sm:max-w-lg sm:w-full"
+        >
             <div class="absolute top-0 right-0 pt-4 pr-4">
-                <button class="text-gray-400 hover:text-gray-500">
+                <button
+                    @click="isOpen = false"
+                    class="text-gray-400 hover:text-gray-500"
+                >
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -33,16 +40,18 @@
             <div class="px-4 pt-5 pb-4 bg-white sm:p-6 sm:pb-4">
                 <h3 class="text-lg font-medium text-center text-gray-900"> Edit Idea </h3>
                 <p class="px-6 mt-4 text-xs leading-5 text-center text-gray-500">You have one hour to edit your idea from the time you created it.</p>
-                <form wire:submit.prevent="createIdea" action="#" method="POST" class="px-4 py-6 space-y-4">
+                <form wire:submit.prevent="updateIdea" action="#" method="POST" class="px-4 py-6 space-y-4">
                     <div>
-                        <input wire:model.defer="title" type="text" class="w-full px-4 py-2 text-sm placeholder-gray-900 bg-gray-100 border-none rounded-xl" placeholder="Your Idea" required>
+                        <input wire:model.defer="title" x-ref="title" type="text" class="w-full px-4 py-2 text-sm placeholder-gray-900 bg-gray-100 border-none rounded-xl" placeholder="Your Idea" required>
                         @error('title')
                             <p class="mt-1 text-xs text-red">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
                         <select wire:model.defer="category" name="category_add" id="category_add" class="w-full px-4 py-2 text-sm bg-gray-100 border-none rounded-xl">
-                            <option value="1">Category 1</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     @error('category')
@@ -62,7 +71,7 @@
                             <span class="ml-1">Attach</span>
                         </button>
                         <button type="submit" class="w-1/2 px-6 py-3 text-xs font-semibold transition duration-150 ease-in border bg-blue rounded-xl border-blue hover:bg-blue-hover">
-                            <span class="ml-1 text-white">Submit</span>
+                            <span class="ml-1 text-white">Update</span>
                         </button>
                     </div>
                 </form>
